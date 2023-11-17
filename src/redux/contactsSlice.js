@@ -6,56 +6,55 @@ import {
 } from './operations';
 
 
-const initialState = { items: [], isLoading: false, error: null };
+const handlePending = state => {
+  state.isLoading = true;
+};
 
+const handleFulfilledContacts = (state, { payload }) => {
+  state.items = payload;
+  state.isLoading = false;
+  state.error = null;
+};
 
+const handleFulfilledAddContacts = (state, { payload }) => {
+  state.items.push(payload);
+  state.isLoading = false;
+  state.error = null;
+};
+const handleFulfilledDeleteContacts = (state, { payload }) => {
+  const index = state.items.findIndex(contact => contact.id === payload.id);
+  state.items.splice(index, 1);
+  state.isLoading = false;
+  state.error = null;
+};
+
+const handleRejected = (state, { payload }) => {
+  state.isLoading = false;
+  state.error = payload;
+};
+
+const initialState = {
+  items: [],
+  isLoading: false,
+  error: null,
+};
 
 export const contactsSlice = createSlice({
   name: 'contacts',
   initialState: initialState,
+  extraReducers: builder => {
+    builder
 
-  extraReducers: {
-    [getContactsThunks.pending]: state => {
-      state.isLoading = true;
-    },
-    [getContactsThunks.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.items = payload;
-      state.error = '';
-    },
-    [getContactsThunks.error]: (state, { payload }) => {
-      state.isLoading = false;
-      state.error = payload;
-    },
-
-    [addContactsThunks.pending]: state => {
-      state.isLoading = true;
-    },
-    [addContactsThunks.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.items = payload;
-      state.error = '';
-    },
-    [addContactsThunks.error]: (state, { payload }) => {
-      state.isLoading = false;
-      state.error = payload;
-    },
-
-    [deleteContactsThunks.pending]: state => {
-      state.isLoading = true;
-    },
-    [deleteContactsThunks.fulfilled]: (state, { payload }) => {
-      state.isLoading = false;
-      state.items = payload;
-      state.error = '';
-    },
-    [deleteContactsThunks.error]: (state, { payload }) => {
-      state.isLoading = false;
-      state.error = payload;
-    },
+      .addCase(getContactsThunks.fulfilled, handleFulfilledContacts)
+      .addCase(addContactsThunks.fulfilled, handleFulfilledAddContacts)
+      .addCase(deleteContactsThunks.fulfilled, handleFulfilledDeleteContacts)
+      .addMatcher(action => {
+        action.type.endsWith('/pending');
+      }, handlePending)
+      .addMatcher(action => {
+        action.type.endsWith('/rejected');
+      }, handleRejected);
   },
 });
-
-
 
 export const contactReducer = contactsSlice.reducer;

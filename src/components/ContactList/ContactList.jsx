@@ -23,12 +23,16 @@ export const ContactItem = ({contact}) => {
 export const ContactList = () => {
 
   const {items} = useSelector(getContacts);
+
+  console.log(items);
  
   const searchContacts = useSelector(getFilterValue);
 
   const filterContacts = items.filter(contact =>
     contact.name.toLowerCase().includes(searchContacts.toLowerCase().trim())
   );
+
+  
 
   return (
     <>
@@ -44,25 +48,3 @@ export const ContactList = () => {
 };
 
 
-
-// export const ContactList = () => {
-//   const dispatch = useDispatch();
-//   const contacts = useSelector(state => state.contacts);
-//   const searchContacts = useSelector(state => state.filter);
-
-//   const filterContacts = contacts.filter(contact =>
-//     contact.name.toLowerCase().includes(searchContacts.toLowerCase().trim())
-//   );
-
-//   return (
-//     <>
-//       <h2>Contacts</h2>
-//       <ul className={styles.contactList}>
-//         {filterContacts.map(contact => (
-
-//           <ContactItem key={contact.id} contact={contact} />
-//         ))}
-//       </ul>
-//     </>
-//   );
-// };
