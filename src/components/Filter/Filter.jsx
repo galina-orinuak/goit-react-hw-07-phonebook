@@ -10,6 +10,8 @@ const dispatch = useDispatch();
     const changeFilter = event => {
         dispatch(setFilter(event.currentTarget.value));
       };
+
+      
     return (
     <>
     <label className={styles.filterLabel}>Find contacts by name

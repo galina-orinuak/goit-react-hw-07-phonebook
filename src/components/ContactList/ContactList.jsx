@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './ContactList.module.css';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { deleteContact } from 'redux/contactsSlice';
+import { deleteContactsThunks } from 'redux/operations';
+import { getFilterValue, getContacts } from 'redux/selectors';
 
-export const ContactItem = ({ contact}) => {
+export const ContactItem = ({contact}) => {
   const dispatch = useDispatch();
 
   return (
@@ -11,7 +12,7 @@ export const ContactItem = ({ contact}) => {
       {contact.name}: {contact.number}{' '}
       <button
         className={styles.deleteBtn}
-        onClick={() => dispatch(deleteContact(contact.id))}
+        onClick={() => dispatch(deleteContactsThunks(contact.id))}
       >
         <RiDeleteBin6Line />
       </button>
@@ -21,11 +22,11 @@ export const ContactItem = ({ contact}) => {
 
 export const ContactList = () => {
 
-  const contacts = useSelector(state => state.contacts.contacts);
+  const {items} = useSelector(getContacts);
  
-  const searchContacts = useSelector(state => state.filter);
+  const searchContacts = useSelector(getFilterValue);
 
-  const filterContacts = contacts.filter(contact =>
+  const filterContacts = items.filter(contact =>
     contact.name.toLowerCase().includes(searchContacts.toLowerCase().trim())
   );
 

@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import styles from './ContactForm.module.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
 
-import { addContact } from 'redux/contactsSlice';
+import { addContactsThunks } from 'redux/operations'; 
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts.contacts);
+  const {items} = useSelector(getContacts);
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -31,7 +32,7 @@ export const ContactForm = () => {
 
     const form = event.target;
     if (
-      contacts.find(
+      items.find(
         contact =>
           contact.name.toLowerCase() === form.elements.name.value.toLowerCase()
       )
@@ -40,7 +41,7 @@ export const ContactForm = () => {
       return;
     }
 
-    dispatch(addContact({ id, name, number }));
+    dispatch(addContactsThunks({ id, name, number }));
     resetForm();
   };
   const resetForm = () => {
